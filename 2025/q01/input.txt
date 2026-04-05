@@ -1,0 +1,3 @@
+Galirin,Voraxoth,Mavoris,Glaurulth,Thymgoril,Norakath,Xiltaril,Jaltyr,Kronurath,Adalaxis,Valsor,Jorathfeth,Felntyr,Eltadir,Xaralmyr,Selkdren,Xendxal,Ardenvoran,Calmirath,Yndzyth,Tharnaris,Belvash,Karthmirix,Zalgalor,Tharulth,Gavralis,Urlith,Pylardrith,Elarxaril,Myrzris
+
+L48,R46,L19,R6,L47,R39,L48,R30,L23,R14,L44,R8,L30,R31,L49,R23,L22,R15,L22,R14,L5,R5,L5,R15,L5,R32,L5,R21,L5,R25,L5,R15,L5,R10,L5,R29,L5,R6,L5,R33,L24,R7,L43,R45,L24,R31,L15,R16,L45,R28,L13,R25,L28,R39,L47,R13,L42,R6,L17
