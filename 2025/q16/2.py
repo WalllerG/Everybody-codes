@@ -1,4 +1,3 @@
-import copy
 import math
 with open('input.txt')as f:
     data = [int(num) for num in f.read().split(',')]
