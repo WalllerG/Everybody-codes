@@ -13,4 +13,5 @@ for num in data:
         else:
             cur -= stamps[index]
             ans += 1
+            
 print(ans)
