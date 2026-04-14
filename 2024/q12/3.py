@@ -79,7 +79,6 @@ for x, y in nums:
                         rank = min(rank, power * 3)
                         break
                     
-
     #for b
     cx, cy = B
     t = (x - cx) / 2
