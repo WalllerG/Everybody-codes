@@ -1,46 +1,67 @@
 with open('input.txt')as f:
-    key, grid = f.read().split('\n\n')
-    
-key *= 1000
-grid = [list(line) for line in grid.splitlines()]
-R = len(grid)
-C = len(grid[0])
-seen = {}
-x_pos = None
-y_pos = None
-for r in range(R):
-    for c in range(C):
-        if grid[r][c] == "<":
-            x_pos = (r, c)
-        if grid[r][c] == ">":
-            y_pos = (r, c)
+    key, G = f.read().split('\n\n')
 
-X = None
-Y = None
-rotation_points = [(i, j) for i in range(R) for j in range(C) if i > 0 and i < R - 1 and j > 0 and j < C - 1]
-print(len(rotation_points), len(key))
-for i in range(10000000):
-    round = 0
-    for index, k in enumerate(key):
-        if k == 'R':
-            x, y = rotation_points[index % len(rotation_points)]
-            flatten = [grid[i][j] for i, j in [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y+1),(x+1,y+1),(x+1,y),(x+1,y-1),(x,y-1)]]
-            rotated = flatten[-1:] + flatten[:-1]
-            for (nx, ny), letter in zip([(x-1,y-1),(x-1,y),(x-1,y+1),(x,y+1),(x+1,y+1),(x+1,y),(x+1,y-1),(x,y-1)], rotated):
-                grid[nx][ny] = letter
-        if k == "L":
-            x, y = rotation_points[index % len(rotation_points)]
-            flatten = [grid[i][j] for i, j in [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y+1),(x+1,y+1),(x+1,y),(x+1,y-1),(x,y-1)]]
-            rotated = flatten[1:] + flatten[:1]
-            for (nx, ny), letter in zip([(x-1,y-1),(x-1,y),(x-1,y+1),(x,y+1),(x+1,y+1),(x+1,y),(x+1,y-1),(x,y-1)], rotated):
-                grid[nx][ny] = letter
-        round += 1
-        if round == len(rotation_points):
-            break
-    if grid[x_pos[0]][x_pos[1]] == '<' and X == None:
-        X = i
-    if grid[y_pos[0]][y_pos[1]] == '>' and Y == None:
-        Y = i
-    if X and Y:
-        print(X, Y)
-        break
+G = G.split('\n')
+R = len(G)
+C = len(G[0])
+
+def get_permutation():
+    G = [[(r, c) for c in range(C)] for r in range(R)]
+    mi = 0
+    for r in range(R):
+        for c in range(C):
+            if r > 0 and r < R - 1 and c > 0 and c < C - 1:
+                k = key[mi]
+                mi = (mi+1)%len(key)
+                M = {
+                    (-1, -1): (-1, 0),
+                    (-1, 0): (-1, 1),
+                    (-1, 1): (0, 1),
+                    (0, 1): (1, 1),
+                    (1, 1): (1, 0),
+                    (1, 0): (1, -1),
+                    (1, -1): (0, -1),
+                    (0, -1): (-1, -1)
+                }
+                OLD = {(dr, dc): G[r+dr][c+dc] for dr, dc in M.keys()}
+                if k == 'R':
+                    for (sr, sc), (fr, fc) in M.items():
+                        G[r+fr][c+fc] = OLD[(sr, sc)]
+                if k == "L":
+                    for (fr, fc), (sr, sc) in M.items():
+                        G[r+fr][c+fc] = OLD[(sr, sc)]
+                        
+    RET = {}
+    for r in range(R):
+        for c in range(C):
+            RET[(r, c)] = G[r][c]
+    return RET
+
+def permutation_multiply(P, Q):
+    C = {}
+    for k in P.keys():
+        C[k] = P[Q[k]]
+    return C
+
+def permutation_power(P, N):
+    if N == 1:
+        return P
+    elif N % 2 == 0:
+        return permutation_power(permutation_multiply(P, P), N//2)
+    else:
+        return permutation_multiply(P, permutation_power(P, N-1))
+    
+P = get_permutation()
+P2 = permutation_power(P, 1048576000)
+
+def apply_permutation(P, G):
+    new_G = [['?' for _ in range(C)] for _ in range(R)]
+    for r in range(R):
+        for c in range(C):
+            pr, pc = P[(r, c)]
+            new_G[r][c] = G[pr][pc]
+    return new_G
+
+new_grid = apply_permutation(P2, G)
+for r in new_grid:
+    print("".join(r))
